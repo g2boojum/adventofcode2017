@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/core.rrb-vector "0.0.11"]
+                 [org.clojure/math.combinatorics "0.1.4"]
                  ]
   :main ^:skip-aot aoc2017.core
   :target-path "target/%s"
