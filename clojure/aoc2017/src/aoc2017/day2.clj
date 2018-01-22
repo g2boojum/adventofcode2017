@@ -39,3 +39,25 @@
 
 (println "First puzzle: " ans1)
 
+(defn pairs
+  [coll]
+  (combo/combinations coll 2))
+
+(pairs (first puzzle-data))
+
+(defn evenly-divisible?
+  [pair]
+  (let [smaller (apply min pair)
+        larger (apply max pair)]
+    (= 0 (rem larger smaller))))
+
+(defn row-division
+  [row]
+  (def p (first (filter evenly-divisible? (pairs row))))
+  (let [smaller (apply min p)
+        larger (apply max p)]
+    (/ larger smaller)))
+
+(def ans2 (apply + (map row-division puzzle-data)))
+
+(println "Second puzzle: " ans2)
