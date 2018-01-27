@@ -42,4 +42,8 @@
      (+ y dy)
      np nsteps-p nsteps-turn]))
 
+;; In the above, what I want to do is iterate steps. The problem is 
+;; that right now the nsteps-turn logic isn't correct. That
+;; should probably be its own function based on [i perimeter ang].
+
 
