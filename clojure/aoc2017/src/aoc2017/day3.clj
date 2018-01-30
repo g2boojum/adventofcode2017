@@ -2,6 +2,7 @@
   (:require [clojure.math.numeric-tower :as math]))
 
 (defn perimeter-side
+  "Length of a side of the j'th perimeter"
   [j]
   (+ (* 2 j) 1))
 
@@ -9,12 +10,18 @@
   [a b]
   (+ (math/abs a) (math/abs b)))
 
+;; Facing E (angle 0): dx = 1, dy = 0
+;; Facing N (angle 90): dx = 0, dy = 1
+;; Facing W (angle 180): dx = -1, dy = 0
+;; Facing S (angle 270): dx = 0, dy = -1
 (def step-dirs {0 [+1 0]
                 90 [0 +1]
                 180 [-1 0]
                 270 [0 -1]})
 
 (defn steps-till-turn
+  "How many steps remaining before the next turn?
+  Depends on the angle faced and the current perimeter."
   [ang j]
   (let [side-length (perimeter-side j)]
     (cond
@@ -24,6 +31,7 @@
 
 
 (defn step
+  "Advance one spot along the spiral grid, possibly changing direction."
   [pos]
   (let [[i x y angle perimeter steps-to-next-turn] pos
         [dx dy] (step-dirs angle)
