@@ -1,21 +1,9 @@
 (ns aoc2017.day3
   (:require [clojure.math.numeric-tower :as math]))
 
-(defn perimeter-size
-  [j]
-  (if (= 0 j)
-    1
-    (* 8 j)))
-
 (defn perimeter-side
   [j]
   (+ (* 2 j) 1))
-
-(defn first-num-in-perimeter
-  [j]
-  (if (= 0 j)
-    1
-    (+ 1 (math/expt (- (* 2 j) 1) 2))))
 
 (defn manhattan-distance-to-origin
   [a b]
@@ -26,24 +14,33 @@
                 180 [-1 0]
                 270 [0 -1]})
 
+(defn steps-till-turn
+  [ang j]
+  (let [side-length (perimeter-side j)]
+    (cond
+      (= ang 90) (- side-length 2)
+      (= ang 0)  side-length
+      :else (- side-length 1))))
+
+
 (defn step
-  [i x y ang perimeter steps-to-next-perimeter steps-to-next-turn]
-  (let [[dx dy] (step-dirs ang)
-        new-perim? (= 0 steps-to-next-perimeter)
-        np (if new-perim? (inc perimeter) perimeter)
-        nsteps-p (if new-perim? 
-                   (perimeter-size np) 
-                   (dec steps-to-next-perimeter))
-        nsteps-turn (if (= 0 steps-to-next-turn)
-                      (perimeter-side np)
-                      (dec steps-to-next-turn))]
+  [pos]
+  (let [[i x y angle perimeter steps-to-next-turn] pos
+        [dx dy] (step-dirs angle)
+        steps (dec steps-to-next-turn)
+        turn? (= 0 steps)
+        new-perimeter? (and (= 0 angle) turn?)
+        ang (if turn? (rem (+ angle 90) 360) angle)
+        perim (if new-perimeter? (inc perimeter) perimeter)]
     [(inc i)
      (+ x dx)
      (+ y dy)
-     np nsteps-p nsteps-turn]))
+     ang
+     perim
+     (if turn? (steps-till-turn ang perim) steps)]))
 
-;; In the above, what I want to do is iterate steps. The problem is 
-;; that right now the nsteps-turn logic isn't correct. That
-;; should probably be its own function based on [i perimeter ang].
+(def puzzle1-loc 312051)
+(def puzzle1-steps (dec puzzle1-loc))
 
-
+(let [[i x y] (nth (iterate step [1 0 0 0 0 1]) puzzle1-steps)] 
+  (println "Puzzle 1: " (manhattan-distance-to-origin x y)))
